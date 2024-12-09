@@ -5,19 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat Room</title>
     <style>
-        #status {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #333;
-            padding: 1rem;
-            background-color: #f4f4f9;
-            border: 2px solid #ccc;
-            border-radius: 4px;
-            margin-top: 20px;
-            text-align: center;
-        }
-
-
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -79,11 +66,18 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
+        #status {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-left: 3%;
+            color: #333;
+            margin-bottom: 1%;
+        }
         #remoteCanvas #localCanvas{
             display:flex;
             flex-direction: column;
             float: right;
-
+    
         }
         #chat-log {
             width: 90%;
@@ -97,7 +91,9 @@
             overflow-y: scroll;
             margin-bottom: 1rem;
         }
-       
+        #localVideo{
+            display:none;
+        }
 
         #chat-message-input, #chat-message-submit {
             width: 100%;
@@ -110,12 +106,7 @@
             border: 1px solid #ccc;
             border-radius: 4px;
         }
-        #localVideo{
-            opacity: 0;
-        }
-        #tempCanvas{
-            opacity: 0;
-        }
+
         #chat-message-submit {
             padding: 0.5rem;
             background-color: #4CAF50;
@@ -131,47 +122,38 @@
         .canvas-container {
             display: flex;
             justify-content: space-around;
-            margin: 0.2rem 4rem;
-            gap: 80px;
+            margin: 2rem 0;
         }
-        .video-tab {
-            display: flex;
-            justify-content: space-around;
-            flex-direction: column;
-            margin: 1rem 4rem;
-            gap: 20px;
-        }
+
         canvas {
             border: 2px solid #ccc;
             background-color: #fff;
         }
 
         #drawingBoard {
-            margin: 1rem auto;
             display: block;
+            margin-right: 3%;
+            margin-left : 3%;
             border: 3px solid #000;
         }
     </style>
 </head>
 <body>
     <header>
-        Chat-Room
+        Welcome to the Chat Room
     </header>
-    <div id="status" class="finding">
-        Finding People...
-    </div>
+    <p id="status">Finding People...</p>
     
 
     <div class="canvas-container">
         <canvas id="drawingBoard" width="800" height="600"></canvas>
-        <div class="video-tab">
+        <div>
+        <video id="localVideo" autoplay muted></video>
         <canvas id="localCanvas" width="400" height="300"></canvas>
         <canvas id="remoteCanvas" width="400" height="300"></canvas>
-        
         </div>
     </div>
-    <video id="localVideo" autoplay muted></video>
-    <canvas id="tempCanvas" width="400" height="300"></canvas>
+
     <!-- Floating Action Button -->
     <div class="fab" onclick="toggleChatModal()">💬</div>
 
@@ -186,21 +168,13 @@
     </div>
 
     {{ room_name|json_script:"room-name" }}
-    {{user_name|json_script:"user-name"}}
+
     <script>
-        // Change after 6 seconds
         function toggleChatModal() {
             const modal = document.getElementById('chatModal');
             modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
         }
-        const localVideo = document.getElementById('localVideo');
-        const localCanvas = document.getElementById('localCanvas');
-        const remoteCanvas = document.getElementById('remoteCanvas');
-        const tempCanvas = document.getElementById('tempCanvas');
-        const localCtx = localCanvas.getContext('2d');
-        const remoteCtx = remoteCanvas.getContext('2d');
-        const tempCtx = tempCanvas.getContext('2d');
-    
+
         // Add your existing WebSocket and canvas JavaScript code here (unchanged)
         // JavaScript code for chat, drawing, and video functionality goes here (unchanged from your original).
     // Get the canvas element and context
@@ -263,7 +237,7 @@
     canvas.addEventListener('mousemove', draw);
 
     const roomName = JSON.parse(document.getElementById('room-name').textContent);
-    const userName = JSON.parse(document.getElementById('user-name').textContent);
+
     // WebSocket setup
     const chatSocket = new WebSocket(
         'ws://' + window.location.host + '/ws/chat/' + roomName + '/'
@@ -326,19 +300,23 @@
             messageInputDom.value = '';
         }
     };
-    
+    const localVideo = document.getElementById('localVideo');
+    const localCanvas = document.getElementById('localCanvas');
+    const remoteCanvas = document.getElementById('remoteCanvas');
+    const localCtx = localCanvas.getContext('2d');
+    const remoteCtx = remoteCanvas.getContext('2d');
+
     // Access webcam
     navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
         localVideo.srcObject = stream;
 
         setInterval(() => {
-            tempCtx.drawImage(localVideo, 0, 0, tempCanvas.width, tempCanvas.height);
-            const frame = tempCanvas.toDataURL('image/jpeg');
-            chatSocket.send(JSON.stringify({ type: 'video', frame: frame, sender: 'local',user:userName }));
+            localCtx.drawImage(localVideo, 0, 0, localCanvas.width, localCanvas.height);
+            const frame = localCanvas.toDataURL('image/jpeg');
+            chatSocket.send(JSON.stringify({ type: 'video', frame: frame, sender: 'local' }));
         }, 100);
     });
 
     </script>
 </body>
 </html>
-
