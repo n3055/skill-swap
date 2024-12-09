@@ -1,0 +1,242 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Small Skill Swap</title>
+    <style>
+        /* General Styles */
+        
+body {
+    font-family: Arial, sans-serif;
+    background-color: #333;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    justify-content: center;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Navbar */
+.navbar {
+    width: 100%;
+    background-color: #444;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+/* Section Container */
+.desktop {
+    background-color: #4a4a6a;
+    padding: 40px;
+    width: 500px;
+    margin-top: 100px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+}
+
+/* Input Fields */
+input[type="text"] {
+    width: 80%;
+    padding: 10px;
+    margin: 20px 0;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+}
+
+/* Buttons */
+button {
+    padding: 15px 30px;
+    margin: 10px;
+    font-size: 18px;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+.get-help-btn {
+    background-color: #5dc4c4;
+}
+
+.help-btn {
+    background-color: #a4e84c;
+}
+
+.find-btn {
+    background-color: #5dc4c4;
+}
+
+.send-btn {
+    background-color: #5dc4c4;
+}
+
+/* Desktop - 5: Video Call, Canvas, and Chat */
+.canvas-container {
+    margin-bottom: 20px;
+}
+
+canvas {
+    background-color: #fff;
+    border: 2px solid #000;
+    border-radius: 10px;
+}
+
+.video-chat-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.video-area {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.video-feed {
+    height: 100px;
+    width: 150px;
+    background-color: #2a2a2a;
+    border-radius: 10px;
+    border: 2px solid #444;
+}
+
+.chat-area {
+    display: flex;
+    justify-content: center;
+}
+
+.chat-window {
+    width: 100%;
+    background-color: #3a3a3a;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.chat-messages {
+    height: 100px;
+    overflow-y: auto;
+    background-color: #2a2a2a;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: left;
+}
+
+.chat-input {
+    display: flex;
+    gap: 10px;
+}
+
+.chat-input input[type="text"] {
+    flex-grow: 1;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.send-btn {
+    padding: 10px 20px;
+}
+/* Adjusting the select element for multiple selections */
+select[multiple] {
+    height: auto;
+    min-height: 100px;
+}
+
+    </style>
+</head>
+<body>
+    
+    <!-- Navbar -->
+    <nav class="navbar">
+        <h1>SMALL SKILL SWAP</h1>
+    </nav>
+
+    <!-- Desktop - 2: Enter Name and Choose Action -->
+    <section class="desktop" id="desktop-2">
+        <input type="text" placeholder="Enter Your Name" required>
+        <div class="buttons">
+            <button class="get-help-btn" onclick="goToQuery()">GET HELP</button>
+            <button class="help-btn" onclick="goToExpertise()">HELP</button>
+        </div>
+    </section>
+
+    <!-- Desktop - 1: Enter Query -->
+    <section class="desktop hidden" id="desktop-1">
+        <input type="text" placeholder="Enter Your Query..."> <select name="Enter Your Query" id="query" >
+            <option class="opt"  value="Python">Python</option>
+            <option class="opt" value="Ml">Ml</option>
+            <option class="opt" value="Web Development">Web Development</option>
+            <option class="opt" value="App Development">App Development</option>
+            <option class="opt" value="Java">Java</option>
+            <option class="opt" value="C++">C++</option>
+            
+        </select>
+
+        <button class="find-btn" onclick="goToVideoChat()">Find</button>
+    </section>
+
+    <!-- Desktop - 3: Enter Expertise -->
+    <section class="desktop hidden" id="desktop-3">
+        <select name="Enter Your Expertise" multiple>
+            <option class="Exp-opt" value="Python">Python</option>
+            <option class="Exp-opt" value="Ml">Ml</option>
+            <option class="Exp-opt" value="Web Development">Web Development</option>
+            <option class="Exp-opt" value="App Development">App Development</option>
+            <option class="Exp-opt" value="Java">Java</option>
+        </select>
+        <button class="find-btn" onclick="goToVideoChat()">Find</button>
+    </section>
+
+
+
+    <script>
+
+        function goToQuery() {
+            document.getElementById('desktop-2').classList.add('hidden');
+            document.getElementById('desktop-1').classList.remove('hidden');
+            
+        }
+
+        function goToExpertise() {
+            document.getElementById('desktop-2').classList.add('hidden');
+            document.getElementById('desktop-3').classList.remove('hidden');
+        }
+
+        function goToVideoChat() {
+            document.querySelectorAll('.desktop').forEach(section => section.classList.add('hidden'));
+            document.getElementById('desktop-5').classList.remove('hidden');
+        }
+
+
+    </script>
+
+</body>
+</html>
