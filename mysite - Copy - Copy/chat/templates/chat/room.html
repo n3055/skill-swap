@@ -1,165 +1,313 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat Room</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+            font-size: 1.5rem;
+        }
+
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            width: 60px;
+            height: 60px;
+            background-color: #4CAF50;
+            border-radius: 50%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            color: white;
+            font-size: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        .fab:hover {
+            background-color: #45a049;
+        }
+
+        /* Chat Modal */
+        .chat-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .chat-dialog {
+            width: 90%;
+            max-width: 400px;
+            background-color: white;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        #status {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        #chat-log {
+            width: 90%;
+            height: 200px;
+            resize: none;
+            border: 2px solid #ccc;
+            padding: 10px;
+            background: #e9e9e9;
+            font-size: 1rem;
+            color: #333;
+            overflow-y: scroll;
+            margin-bottom: 1rem;
+        }
+
+        #chat-message-input, #chat-message-submit {
+            width: 100%;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        #chat-message-input {
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        #chat-message-submit {
+            padding: 0.5rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #chat-message-submit:hover {
+            background-color: #45a049;
+        }
+        .canvas-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 2rem 0;
+        }
+
+        canvas {
+            border: 2px solid #ccc;
+            background-color: #fff;
+        }
+
+        #drawingBoard {
+            margin: 1rem auto;
+            display: block;
+            border: 3px solid #000;
+        }
+    </style>
 </head>
-<style>
-    canvas {
-        border: 5px solid #000;
-        background-color: white;
-    }
-</style>
 <body>
+    <header>
+        Welcome to the Chat Room
+    </header>
     <p id="status">Finding People...</p>
-    <textarea id="chat-log" cols="100" rows="20" readonly></textarea><br>
-    <input id="chat-message-input" type="text" size="100" placeholder="Type your message here..."><br>
-    <input id="chat-message-submit" type="button" value="Send">
-    <canvas id="drawingBoard" width="800" height="600"></canvas>
-    <video id="localVideo" autoplay muted></video>
-<canvas id="localCanvas" width="400" height="300" style="border: 1px solid black;"></canvas>
-<canvas id="remoteCanvas" width="400" height="300" style="border: 1px solid black;"></canvas>
+    
+
+    <div class="canvas-container">
+        <canvas id="drawingBoard" width="800" height="600"></canvas>
+        <div>
+        <video id="localVideo" autoplay muted></video>
+        <canvas id="localCanvas" width="400" height="300"></canvas>
+        <canvas id="remoteCanvas" width="400" height="300"></canvas>
+        </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <div class="fab" onclick="toggleChatModal()">💬</div>
+
+    <!-- Chat Modal -->
+    <div class="chat-modal" id="chatModal">
+        <div class="chat-dialog">
+            <textarea id="chat-log" readonly></textarea>
+            <input id="chat-message-input" type="text" placeholder="Type your message here...">
+            <input id="chat-message-submit" type="button" value="Send">
+            <button onclick="toggleChatModal()" style="width: 100%; padding: 0.5rem; background-color: #ccc; border: none; border-radius: 4px;">Close</button>
+        </div>
+    </div>
+
     {{ room_name|json_script:"room-name" }}
+
     <script>
-        // Get the canvas element and context
-        const canvas = document.getElementById('drawingBoard');
-        const ctx = canvas.getContext('2d');
-
-        let drawing = false; // Track whether the user is drawing
-
-        // Start drawing
-        function startDrawing(e) {
-            drawing = true;
-            ctx.beginPath();
+        function toggleChatModal() {
+            const modal = document.getElementById('chatModal');
+            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
         }
 
-        // Stop drawing
-        function stopDrawing() {
-            drawing = false;
-            ctx.beginPath();
+        // Add your existing WebSocket and canvas JavaScript code here (unchanged)
+        // JavaScript code for chat, drawing, and video functionality goes here (unchanged from your original).
+    // Get the canvas element and context
+    const canvas = document.getElementById('drawingBoard');
+    const ctx = canvas.getContext('2d');
+
+    let drawing = false; // Track whether the user is drawing
+
+    // Start drawing
+    function startDrawing(e) {
+        drawing = true;
+        ctx.beginPath();
+    }
+
+    // Stop drawing
+    function stopDrawing() {
+        drawing = false;
+        ctx.beginPath();
+    }
+
+    // Draw on the canvas and send coordinates
+    function draw(e) {
+        if (!drawing) return;
+
+        const mouseX = e.offsetX;
+        const mouseY = e.offsetY;
+
+        // Draw locally
+        ctx.lineWidth = 3;
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = '#000';
+        ctx.lineTo(mouseX, mouseY);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(mouseX, mouseY);
+
+        // Send coordinates to WebSocket
+        chatSocket.send(JSON.stringify({
+            type: 'draw',
+            X: mouseX,
+            Y: mouseY
+        }));
+    }
+
+    // Draw received points
+    function drawPoint(x, y) {
+        ctx.lineWidth = 3;
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = '#000';
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+    }
+
+    // Add canvas event listeners
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseleave', stopDrawing);
+    canvas.addEventListener('mousemove', draw);
+
+    const roomName = JSON.parse(document.getElementById('room-name').textContent);
+
+    // WebSocket setup
+    const chatSocket = new WebSocket(
+        'ws://' + window.location.host + '/ws/chat/' + roomName + '/'
+        //'wss://' + 'e068-2405-201-d01b-882a-38f0-a90e-407-7479.ngrok-free.app' + '/ws/chat/' + roomName + '/'
+    );
+
+    chatSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+
+        // Handle status updates
+        if (data.status) {
+            document.getElementById("status").innerText = data.status;
         }
 
-        // Draw on the canvas and send coordinates
-        function draw(e) {
-            if (!drawing) return;
+        // Handle chat messages
+        if (data.message) {
+            document.querySelector('#chat-log').value += (data.message + '\n');
+        }
 
-            const mouseX = e.offsetX;
-            const mouseY = e.offsetY;
+        // Handle drawing points
+        if (data.X !== undefined && data.Y !== undefined) {
+            drawPoint(data.X, data.Y);
+        }
+        if (data.type === 'video') {
+            const img = new Image();
+            img.src = data.frame;
+            img.onload = () => {
+                if (data.sender === 'local') {
+                    localCtx.clearRect(0, 0, localCanvas.width, localCanvas.height);
+                    localCtx.drawImage(img, 0, 0, localCanvas.width, localCanvas.height);
+                } else {
+                    remoteCtx.clearRect(0, 0, remoteCanvas.width, remoteCanvas.height);
+                    remoteCtx.drawImage(img, 0, 0, remoteCanvas.width, remoteCanvas.height);
+                }
+            };
+        }
+    };
 
-            // Draw locally
-            ctx.lineWidth = 3;
-            ctx.lineCap = 'round';
-            ctx.strokeStyle = '#000';
-            ctx.lineTo(mouseX, mouseY);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(mouseX, mouseY);
+    chatSocket.onclose = function (e) {
+        document.getElementById("status").innerText = "Disconnected.";
+        console.error('Chat socket closed unexpectedly');
+    };
 
-            // Send coordinates to WebSocket
+    // Sending a chat message
+    document.querySelector('#chat-message-input').focus();
+    document.querySelector('#chat-message-input').onkeyup = function (e) {
+        if (e.key === 'Enter') {
+            document.querySelector('#chat-message-submit').click();
+        }
+    };
+
+    document.querySelector('#chat-message-submit').onclick = function (e) {
+        const messageInputDom = document.querySelector('#chat-message-input');
+        const message = messageInputDom.value.trim();
+        if (message) {
             chatSocket.send(JSON.stringify({
-                type: 'draw',
-                X: mouseX,
-                Y: mouseY
+                type: 'message',
+                message: message
             }));
+            messageInputDom.value = '';
         }
+    };
+    const localVideo = document.getElementById('localVideo');
+    const localCanvas = document.getElementById('localCanvas');
+    const remoteCanvas = document.getElementById('remoteCanvas');
+    const localCtx = localCanvas.getContext('2d');
+    const remoteCtx = remoteCanvas.getContext('2d');
 
-        // Draw received points
-        function drawPoint(x, y) {
-            ctx.lineWidth = 3;
-            ctx.lineCap = 'round';
-            ctx.strokeStyle = '#000';
-            ctx.lineTo(x, y);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(x, y);
-        }
+    // Access webcam
+    navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
+        localVideo.srcObject = stream;
 
-        // Add canvas event listeners
-        canvas.addEventListener('mousedown', startDrawing);
-        canvas.addEventListener('mouseup', stopDrawing);
-        canvas.addEventListener('mouseleave', stopDrawing);
-        canvas.addEventListener('mousemove', draw);
+        setInterval(() => {
+            localCtx.drawImage(localVideo, 0, 0, localCanvas.width, localCanvas.height);
+            const frame = localCanvas.toDataURL('image/jpeg');
+            chatSocket.send(JSON.stringify({ type: 'video', frame: frame, sender: 'local' }));
+        }, 100);
+    });
 
-        const roomName = JSON.parse(document.getElementById('room-name').textContent);
-
-        // WebSocket setup
-        const chatSocket = new WebSocket(
-            'ws://' + window.location.host + '/ws/chat/' + roomName + '/'
-            //'wss://' + 'e8de-157-50-38-115.ngrok-free.app' + '/ws/chat/' + roomName + '/'
-        );
-
-        chatSocket.onmessage = function (e) {
-            const data = JSON.parse(e.data);
-
-            // Handle status updates
-            if (data.status) {
-                document.getElementById("status").innerText = data.status;
-            }
-
-            // Handle chat messages
-            if (data.message) {
-                document.querySelector('#chat-log').value += (data.message + '\n');
-            }
-
-            // Handle drawing points
-            if (data.X !== undefined && data.Y !== undefined) {
-                drawPoint(data.X, data.Y);
-            }
-            if (data.type === 'video') {
-                const img = new Image();
-                img.src = data.frame;
-                img.onload = () => {
-                    if (data.sender === 'local') {
-                        localCtx.clearRect(0, 0, localCanvas.width, localCanvas.height);
-                        localCtx.drawImage(img, 0, 0, localCanvas.width, localCanvas.height);
-                    } else {
-                        remoteCtx.clearRect(0, 0, remoteCanvas.width, remoteCanvas.height);
-                        remoteCtx.drawImage(img, 0, 0, remoteCanvas.width, remoteCanvas.height);
-                    }
-                };
-            }
-        };
-
-        chatSocket.onclose = function (e) {
-            document.getElementById("status").innerText = "Disconnected.";
-            console.error('Chat socket closed unexpectedly');
-        };
-
-        // Sending a chat message
-        document.querySelector('#chat-message-input').focus();
-        document.querySelector('#chat-message-input').onkeyup = function (e) {
-            if (e.key === 'Enter') {
-                document.querySelector('#chat-message-submit').click();
-            }
-        };
-
-        document.querySelector('#chat-message-submit').onclick = function (e) {
-            const messageInputDom = document.querySelector('#chat-message-input');
-            const message = messageInputDom.value.trim();
-            if (message) {
-                chatSocket.send(JSON.stringify({
-                    type: 'message',
-                    message: message
-                }));
-                messageInputDom.value = '';
-            }
-        };
-        const localVideo = document.getElementById('localVideo');
-        const localCanvas = document.getElementById('localCanvas');
-        const remoteCanvas = document.getElementById('remoteCanvas');
-        const localCtx = localCanvas.getContext('2d');
-        const remoteCtx = remoteCanvas.getContext('2d');
-    
-        // Access webcam
-        navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
-            localVideo.srcObject = stream;
-    
-            setInterval(() => {
-                const frame = localCanvas.toDataURL('image/jpeg');
-                chatSocket.send(JSON.stringify({ type: 'video', frame: frame, sender: 'local' }));
-            }, 50);
-        });
-    
     </script>
 </body>
 </html>
+
