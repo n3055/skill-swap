@@ -69,10 +69,16 @@
         #status {
             font-size: 1.2rem;
             font-weight: bold;
+            margin-left: 3%;
             color: #333;
-            margin-bottom: 1rem;
+            margin-bottom: 1%;
         }
-
+        #remoteCanvas #localCanvas{
+            display:flex;
+            flex-direction: column;
+            float: right;
+    
+        }
         #chat-log {
             width: 90%;
             height: 200px;
@@ -84,6 +90,9 @@
             color: #333;
             overflow-y: scroll;
             margin-bottom: 1rem;
+        }
+        #localVideo{
+            display:none;
         }
 
         #chat-message-input, #chat-message-submit {
@@ -122,8 +131,9 @@
         }
 
         #drawingBoard {
-            margin: 1rem auto;
             display: block;
+            margin-right: 3%;
+            margin-left : 3%;
             border: 3px solid #000;
         }
     </style>
@@ -310,4 +320,3 @@
     </script>
 </body>
 </html>
-
