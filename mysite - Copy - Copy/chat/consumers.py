@@ -5,6 +5,7 @@ import base64  # For encoding frames
 
 # Dictionary to track the number of connections in each room
 room_connections = {}
+users = []
 
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
@@ -63,10 +64,28 @@ class ChatConsumer(WebsocketConsumer):
         elif text_data_json.get("type") == "video":
             # Handle video frame
             frame = text_data_json.get("frame")
-            sender = text_data_json.get("sender")  # Identify the sender
-            async_to_sync(self.channel_layer.group_send)(
-                self.room_group_name, {"type": "video.frame", "frame": frame, "sender": sender}
-            )
+            sender = text_data_json.get("sender")
+            user_N = text_data_json.get("user") 
+            if user_N not in users:
+                if len(users)==0: # Identify the sender
+                    async_to_sync(self.channel_layer.group_send)(
+                        self.room_group_name, {"type": "video.frame", "frame": frame, "sender": "local","user":user_N}
+                    )
+                    users.append(user_N)
+                else:
+                    async_to_sync(self.channel_layer.group_send)(
+                        self.room_group_name, {"type": "video.frame", "frame": frame, "sender": "remote","user":user_N}
+                    )
+                    users.append(user_N)
+            else:
+                if user_N == users[0]:
+                    async_to_sync(self.channel_layer.group_send)(
+                    self.room_group_name, {"type": "video.frame", "frame": frame, "sender": "local","user":user_N}
+                    )
+                else:
+                    async_to_sync(self.channel_layer.group_send)(
+                    self.room_group_name, {"type": "video.frame", "frame": frame, "sender": "remote","user":user_N}
+                    )                                       
 
     def chat_message(self, event):
         message = event["message"]
@@ -84,4 +103,5 @@ class ChatConsumer(WebsocketConsumer):
     def video_frame(self, event):
         frame = event["frame"]
         sender = event["sender"]
-        self.send(text_data=json.dumps({"type": "video", "frame": frame, "sender": sender}))
+        user = event["user"]
+        self.send(text_data=json.dumps({"type": "video", "frame": frame, "sender": sender,"user":user}))
