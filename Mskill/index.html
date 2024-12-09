@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skill Swap</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <h1>Small Skill Swap</h1>
+    </nav>
+
+    <!-- Desktop - 2: Home Page for Name Input and Options -->
+    <section class="desktop" id="desktop-2">
+        <h2>Enter Your Name</h2>
+        <input type="text" id="nameInput" placeholder="Your Name">
+        <div class="options">
+            <button id="getHelpBtn">GET HELP</button>
+            <button id="helpBtn">HELP</button>
+        </div>
+    </section>
+
+    <!-- Desktop - 1: GET HELP Page -->
+    <section class="desktop hidden" id="desktop-1">
+        <h2>Enter Your Query</h2>
+        <input type="text" id="queryInput" placeholder="Enter your query...">
+        <button id="findHelpBtn">Find</button>
+    </section>
+
+    <!-- Desktop - 3: HELP Page -->
+    <section class="desktop hidden" id="desktop-3">
+        <h2>Enter Your Expertise</h2>
+        <input type="text" id="expertiseInput" placeholder="Enter your expertise...">
+        <button id="findExpertiseBtn">Find</button>
+    </section>
+
+    <!-- Desktop - 5: Canvas, Video Call, and Chat Section -->
+    <section class="desktop hidden" id="desktop-5">
+        <div class="canvas-container">
+            <canvas id="drawingCanvas"></canvas>
+            <div class="canvas-tools">
+                <button id="penBtn">Pen</button>
+                <button id="eraserBtn">Eraser</button>
+                <button id="clearBtn">Clear</button>
+            </div>
+        </div>
+
+        <div class="video-chat-container">
+            <div class="video-section">
+                <video autoplay muted id="localVideo"></video>
+                <video autoplay id="remoteVideo"></video>
+            </div>
+
+            <div class="chat-section">
+                <div class="chat-box" id="chatBox"></div>
+                <div class="chat-input">
+                    <input type="text" id="chatMessage" placeholder="Type your message...">
+                    <button id="sendBtn">Send</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

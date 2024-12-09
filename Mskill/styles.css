@@ -1,0 +1,131 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #222;
+    color: #fff;
+}
+
+nav {
+    background-color: #444;
+    padding: 1rem;
+    text-align: center;
+    font-size: 24px;
+}
+
+.desktop {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: calc(100vh - 60px);
+    background-color: #333;
+}
+
+.hidden {
+    display: none;
+}
+
+h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+input[type="text"] {
+    padding: 10px;
+    width: 300px;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+button {
+    padding: 10px 20px;
+    margin: 10px;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    background-color: #5dc4c4;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background-color: #4ca0a0;
+}
+
+/* Canvas and Video Call Section */
+.canvas-container {
+    display: flexbox;
+    /* width: 700px;
+    height: 500px; */
+    align-content: stretch;
+    position: relative;
+    background-color: #fff;
+    float: left;
+}
+
+canvas {
+    
+    background-color: #fff;
+    border: 1px solid #ccc;
+}
+
+.canvas-tools {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.video-chat-container {
+    width: 40%;
+    height: 100%;
+    background-color: #222;
+    padding: 10px;
+    float: right;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.video-section video {
+    width: 200px;
+    height: 150px;
+    background-color: #000;
+    margin: 10px;
+    border-radius: 5px;
+}
+
+.chat-section {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+}
+
+.chat-box {
+    flex: 1;
+    background-color: #444;
+    padding: 10px;
+    overflow-y: auto;
+    height: 150px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.chat-input {
+    display: flex;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 5px;
+    margin-right: 5px;
+}
+
+.chat-input button {
+    padding: 10px 15px;
+}
